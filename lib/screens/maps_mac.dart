@@ -179,7 +179,7 @@ class MapsMac extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         scaleToDevicePixelRatio: true,
-        googleApiKey: "AIzaSyAy9DGkx6ZQlD8yP2Hc9x5E-xLCDE9ifFs",
+        googleApiKey: "AIzaSyACZxzywgVHYUfa3EOvur_wxwpte3BOwG8",
         visible: const [
           GeocodedLocation.address('Santa Monica Pier'),
         ],

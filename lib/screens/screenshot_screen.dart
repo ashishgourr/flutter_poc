@@ -143,6 +143,7 @@ class _ScreenShotScreenState extends State<ScreenShotScreen> {
       await Process.run('start', [file.path]);
     }
 
+    //  Uncomment for web
     // else if (kIsWeb) {
     //   final blob = html.Blob([pdfData], 'application/pdf');
     //   final url = html.Url.createObjectUrlFromBlob(blob);
@@ -246,7 +247,7 @@ class MyTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Table(
-      border: TableBorder.all(), // Add border for the entire table
+      border: TableBorder.all(),
       children: const [
         TableRow(
           children: [

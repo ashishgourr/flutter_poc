@@ -79,13 +79,13 @@ flutter:
   assets:
     - assets/
 
-  fonts:
-    - family: OpenSans
-      fonts:
-        - asset: assets/fonts/OpenSans-Regular.ttf
-    - family: LoveDays
-      fonts:
-        - asset: assets/fonts/LoveDays-Regular.ttf
+  # fonts:
+  #   - family: OpenSans
+  #     fonts:
+  #       - asset: assets/fonts/OpenSans-Regular.ttf
+  #   - family: LoveDays
+  #     fonts:
+  #       - asset: assets/fonts/LoveDays-Regular.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:

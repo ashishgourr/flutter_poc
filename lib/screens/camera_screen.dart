@@ -44,11 +44,11 @@ class _CameraScreenState extends State<CameraScreen> {
       return;
     }
 
-    // if (isFlashOn == false) {
-    //   await cameraController.setFlashMode(FlashMode.off);
-    // } else {
-    //   await cameraController.setFlashMode(FlashMode.torch);
-    // }
+    if (isFlashOn == false) {
+      await cameraController.setFlashMode(FlashMode.off);
+    } else {
+      await cameraController.setFlashMode(FlashMode.torch);
+    }
     image = await cameraController.takePicture();
 
     if (cameraController.value.flashMode == FlashMode.torch) {
