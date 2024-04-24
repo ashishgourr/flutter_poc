@@ -2,7 +2,7 @@
 
 ## Screens
 
-Camera Screen - camera_screen.dart
+Camera Screen -camera_screen.dart
 
 Device Info Screen - device_info_screen.dart
 
