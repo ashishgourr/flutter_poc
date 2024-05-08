@@ -57,6 +57,26 @@
         }
       });
     });
+
+    window.addEventListener('keydown', function(e) {
+    if (event.target == document.body) {
+    
+    // todo..
+    }
+  
+    if (event.metaKey || event.ctrlKey) {
+      switch (event.key) {
+        // case '=': // Prevent zooming in.
+        // case '-': // Prevent zooming out.
+        // case 'd': // Prevent bookmark on Firefox e.g.
+        // case 'g': // Prevent open find on Firefox e.g.
+        // case 'z': // Prevent restoring tab on Safari.
+        case 'p': // Prevent print dialog
+          event.preventDefault();
+          break;
+      }
+    }
+  });
   </script>
 </body>
 </html>
