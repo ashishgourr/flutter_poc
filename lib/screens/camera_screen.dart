@@ -3,13 +3,13 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:external_path/external_path.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:media_scanner/media_scanner.dart';
 
 import 'video_screen.dart';
 
 class CameraScreen extends StatefulWidget {
-  final List<CameraDescription> cameras;
-  const CameraScreen({super.key, required this.cameras});
+  const CameraScreen({Key? key}) : super(key: key);
 
   @override
   State<CameraScreen> createState() => _CameraScreenState();
@@ -17,8 +17,9 @@ class CameraScreen extends StatefulWidget {
 
 class _CameraScreenState extends State<CameraScreen> {
   late CameraController cameraController;
-  late Future<void> cameraValue;
+  Future<void>? cameraValue;
   List<File> imagesList = [];
+  List<CameraDescription> camerasList = [];
   bool isFlashOn = false;
   bool isRearCamera = true;
   bool _isRecording = false;
@@ -68,7 +69,7 @@ class _CameraScreenState extends State<CameraScreen> {
 
   void startCamera(int camera) {
     cameraController = CameraController(
-      widget.cameras[camera],
+      camerasList[camera],
       ResolutionPreset.high,
       enableAudio: true,
     );
@@ -94,16 +95,28 @@ class _CameraScreenState extends State<CameraScreen> {
 
   @override
   void initState() {
-    // Only start camera if the platform is Android or iOS
-
-    // if (!kIsWeb) {
-    //   // Only start camera if the platform is Android or iOS
-    //   if (Platform.isAndroid || Platform.isIOS) {
-    //     startCamera(0);
-    //   }
-    // }
-    startCamera(0);
     super.initState();
+    getCameras();
+  }
+
+  void getCameras() async {
+    final cameras = await availableCameras();
+
+    Future.delayed(const Duration(microseconds: 1000));
+
+    if (cameras.isNotEmpty) {
+      camerasList = cameras;
+
+      cameraController = CameraController(
+        camerasList[0],
+        ResolutionPreset.high,
+        enableAudio: true,
+      );
+
+      cameraValue = cameraController.initialize();
+
+      // startCamera(0);
+    }
   }
 
   @override
@@ -141,35 +154,14 @@ class _CameraScreenState extends State<CameraScreen> {
       },
     );
 
-    // if (!kIsWeb) {
-    //   if (Platform.isAndroid || Platform.isIOS) {
-    //     cameraPreview = FutureBuilder(
-    //       future: cameraValue,
-    //       builder: (context, snapshot) {
-    //         if (snapshot.connectionState == ConnectionState.done) {
-    //           return SizedBox(
-    //             width: size.width,
-    //             height: size.height,
-    //             child: FittedBox(
-    //               fit: BoxFit.cover,
-    //               child: SizedBox(
-    //                 width: 100,
-    //                 child: CameraPreview(cameraController),
-    //               ),
-    //             ),
-    //           );
-    //         } else {
-    //           return const Center(
-    //             child: CircularProgressIndicator(),
-    //           );
-    //         }
-    //       },
-    //     );
-    //   }
-    // }
-
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            context.pop();
+          },
+        ),
         title: const Text('Camera Screen'),
       ),
       floatingActionButton: Row(
@@ -203,7 +195,6 @@ class _CameraScreenState extends State<CameraScreen> {
       body: Stack(
         children: [
           cameraPreview,
-          // if (!kIsWeb && (Platform.isAndroid || Platform.isIOS))
           SafeArea(
             child: Align(
               alignment: Alignment.topRight,

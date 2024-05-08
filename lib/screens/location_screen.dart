@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:go_router/go_router.dart';
 
 class LocationScreen extends StatefulWidget {
   const LocationScreen({super.key});
@@ -83,7 +84,15 @@ class _LocationScreenState extends State<LocationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Location Page")),
+      appBar: AppBar(
+        title: const Text("Location Page"),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            context.pop();
+          },
+        ),
+      ),
       body: SafeArea(
         child: Center(
           child: Column(

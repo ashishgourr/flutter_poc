@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_to_pdf/flutter_to_pdf.dart';
+import 'package:go_router/go_router.dart';
 import 'package:universal_html/html.dart' as html;
 
 import 'package:flutter/foundation.dart';
@@ -77,6 +78,12 @@ class _ScreenShotScreenState extends State<ScreenShotScreen> {
         },
         child: Scaffold(
           appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                context.pop();
+              },
+            ),
             title: GestureDetector(
               onTap: () {
                 saveMultiplePdfToGallery(capturedImages);

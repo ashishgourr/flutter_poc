@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../routes/app_routes.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -15,42 +18,42 @@ class HomeScreen extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/camera');
+                context.go("/${AppRoutes.camera.name}");
               },
               child: const Text('Camera Screen'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/device-info');
+                context.go("/${AppRoutes.deviceInfo.name}");
               },
               child: const Text('Device Info Screen'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/google-maps');
+                context.go("/${AppRoutes.googleMaps.name}");
               },
               child: const Text('Google Maps Screen'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/location');
+                context.go("/${AppRoutes.location.name}");
               },
               child: const Text('Location Screen'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/printing');
+                context.go("/${AppRoutes.printing.name}");
               },
               child: const Text('Printing Screen'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/screenshot');
+                context.go("/${AppRoutes.screenshot.name}");
               },
               child: const Text('Screenshot Screen'),
             ),

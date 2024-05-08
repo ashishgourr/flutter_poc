@@ -1,6 +1,7 @@
 // ignore_for_file: unused_field
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class GoogleMapScreen extends StatefulWidget {
@@ -112,6 +113,12 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Google Maps Demo'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              context.pop();
+            },
+          ),
         ),
         body: Builder(builder: (BuildContext context) {
           return GoogleMap(

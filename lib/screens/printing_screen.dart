@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
@@ -164,6 +165,12 @@ class PrintingScreenState extends State<PrintingScreen>
     return Scaffold(
       appBar: AppBar(
         title: const Text('Flutter PDF Demo'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            context.pop();
+          },
+        ),
         // bottom: TabBar(
         //   controller: _tabController,
         //   tabs: examples.map<Tab>((e) => Tab(text: e.name)).toList(),

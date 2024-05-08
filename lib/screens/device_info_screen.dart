@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:go_router/go_router.dart';
 
 class DeviceInfoScreen extends StatefulWidget {
   const DeviceInfoScreen({Key? key}) : super(key: key);
@@ -188,23 +189,29 @@ class _DeviceInfoScreenState extends State<DeviceInfoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Device Info'),
+        title: const Text('Device Info'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            context.pop();
+          },
+        ),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: deviceData.entries.map((entry) {
             return Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
+              padding: const EdgeInsets.symmetric(vertical: 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     entry.key,
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   TextFormField(
                     initialValue: entry.value.toString(),
                     readOnly: true,
