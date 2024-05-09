@@ -7,6 +7,7 @@ import 'package:web_poc/screens/printing_screen.dart';
 import 'package:web_poc/screens/screenshot_screen.dart';
 
 import '../screens/device_info_screen.dart';
+import '../screens/error_screen.dart';
 import '../screens/home_screen.dart';
 import 'app_routes.dart';
 
@@ -16,6 +17,8 @@ String initialRoute = '/';
 final GoRouter router = GoRouter(
   navigatorKey: routeNavigatorKey,
   initialLocation: initialRoute,
+  errorBuilder: (context, state) =>
+      ErrorScreen(message: state.error?.message ?? ""),
   routes: [
     GoRoute(
         path: '/',
