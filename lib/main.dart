@@ -1,10 +1,14 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+import 'package:go_router/go_router.dart';
+import 'package:url_strategy/url_strategy.dart';
 import 'routes/app_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  setPathUrlStrategy();
+  GoRouter.optionURLReflectsImperativeAPIs = true;
   WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
     if (Platform.isAndroid) {
       await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);

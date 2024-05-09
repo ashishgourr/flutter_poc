@@ -16,54 +16,55 @@ String initialRoute = '/';
 final GoRouter router = GoRouter(
   navigatorKey: routeNavigatorKey,
   initialLocation: initialRoute,
-  routes: <RouteBase>[
+  routes: [
     GoRoute(
-      path: '/',
-      builder: (BuildContext context, GoRouterState state) {
-        return const HomeScreen();
-      },
-    ),
-    GoRoute(
-      path: "/${AppRoutes.camera.name}",
-      name: AppRoutes.camera.name,
-      builder: (BuildContext context, GoRouterState state) {
-        return const CameraScreen();
-      },
-    ),
-    GoRoute(
-      path: "/${AppRoutes.deviceInfo.name}",
-      name: AppRoutes.deviceInfo.name,
-      builder: (BuildContext context, GoRouterState state) {
-        return const DeviceInfoScreen();
-      },
-    ),
-    GoRoute(
-      path: "/${AppRoutes.googleMaps.name}",
-      name: AppRoutes.googleMaps.name,
-      builder: (BuildContext context, GoRouterState state) {
-        return const GoogleMapScreen();
-      },
-    ),
-    GoRoute(
-      path: "/${AppRoutes.location.name}",
-      name: AppRoutes.location.name,
-      builder: (BuildContext context, GoRouterState state) {
-        return const LocationScreen();
-      },
-    ),
-    GoRoute(
-      path: "/${AppRoutes.printing.name}",
-      name: AppRoutes.printing.name,
-      builder: (BuildContext context, GoRouterState state) {
-        return const PrintingScreen();
-      },
-    ),
-    GoRoute(
-      path: "/${AppRoutes.screenshot.name}",
-      name: AppRoutes.screenshot.name,
-      builder: (BuildContext context, GoRouterState state) {
-        return const ScreenShotScreen();
-      },
-    ),
+        path: '/',
+        pageBuilder: (context, state) {
+          return const MaterialPage(child: HomeScreen());
+        },
+        routes: [
+          GoRoute(
+            path: AppRoutes.camera.name,
+            name: AppRoutes.camera.name,
+            pageBuilder: (context, state) {
+              return const MaterialPage(child: CameraScreen());
+            },
+          ),
+          GoRoute(
+            path: AppRoutes.deviceInfo.name,
+            name: AppRoutes.deviceInfo.name,
+            pageBuilder: (context, state) {
+              return const MaterialPage(child: DeviceInfoScreen());
+            },
+          ),
+          GoRoute(
+            path: AppRoutes.googleMaps.name,
+            name: AppRoutes.googleMaps.name,
+            pageBuilder: (context, state) {
+              return const MaterialPage(child: GoogleMapScreen());
+            },
+          ),
+          GoRoute(
+            path: AppRoutes.location.name,
+            name: AppRoutes.location.name,
+            pageBuilder: (context, state) {
+              return const MaterialPage(child: LocationScreen());
+            },
+          ),
+          GoRoute(
+            path: AppRoutes.printing.name,
+            name: AppRoutes.printing.name,
+            pageBuilder: (context, state) {
+              return const MaterialPage(child: PrintingScreen());
+            },
+          ),
+          GoRoute(
+            path: AppRoutes.screenshot.name,
+            name: AppRoutes.screenshot.name,
+            pageBuilder: (context, state) {
+              return const MaterialPage(child: ScreenShotScreen());
+            },
+          ),
+        ]),
   ],
 );
