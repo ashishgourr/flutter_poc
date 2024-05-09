@@ -4,7 +4,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 
 class LocationScreen extends StatefulWidget {
-  const LocationScreen({super.key});
+  final String name;
+  const LocationScreen({super.key, required this.name});
 
   @override
   State<LocationScreen> createState() => _LocationScreenState();
@@ -85,7 +86,7 @@ class _LocationScreenState extends State<LocationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Location Page"),
+        title: Text("Location Page ${widget.name}"),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {

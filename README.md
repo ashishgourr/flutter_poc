@@ -13,3 +13,7 @@ Location Screen - location_screen.dart
 Printing Screen - printing_screen.dart
 
 Screenshot Screen - screen_shot_screen.dart
+
+## Routing (Navigator 2.0)
+
+Gorouter

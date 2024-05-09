@@ -39,7 +39,8 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                context.push("/${AppRoutes.location.name}");
+                String name = "mumbai";
+                context.push("/${AppRoutes.location.name}/$name");
               },
               child: const Text('Location Screen'),
             ),
