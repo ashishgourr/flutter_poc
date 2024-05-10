@@ -5,5 +5,9 @@ enum AppRoutes {
   googleMaps,
   location,
   printing,
-  screenshot
+  screenshot,
+  profile,
+  profileList,
+  settings,
+  subSetting
 }

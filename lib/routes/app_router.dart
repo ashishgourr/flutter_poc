@@ -11,13 +11,24 @@ import 'package:web_poc/utils/auth_service.dart';
 
 import '../screens/device_info_screen.dart';
 import '../screens/error_screen.dart';
+import '../screens/profile_screen.dart';
+import '../screens/nested_navigation_wrapper.dart';
+import '../screens/settings_view.dart';
+import '../screens/profile_list_screen.dart';
+import '../screens/sub_setting_view.dart';
 import 'app_routes.dart';
 
-final GlobalKey<NavigatorState> routeNavigatorKey = GlobalKey();
-String initialRoute = '/';
-
 class AppRouter {
-  late final GoRouter router = GoRouter(
+  AppRouter._();
+
+  static final GlobalKey<NavigatorState> routeNavigatorKey = GlobalKey();
+  static String initialRoute = '/';
+  static final shellNavigatorHome =
+      GlobalKey<NavigatorState>(debugLabel: 'shellHome');
+  static final shellNavigatorSettings =
+      GlobalKey<NavigatorState>(debugLabel: 'shellSettings');
+
+  static final GoRouter router = GoRouter(
     navigatorKey: routeNavigatorKey,
     initialLocation: initialRoute,
     errorBuilder: (context, state) =>
@@ -66,6 +77,107 @@ class AppRouter {
         path: "/${AppRoutes.screenshot.name}",
         name: AppRoutes.screenshot.name,
         builder: (BuildContext context, state) => const ScreenShotScreen(),
+      ),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return NestedNavigationWrapper(
+            navigationShell: navigationShell,
+          );
+        },
+        branches: <StatefulShellBranch>[
+          /// Profile
+          StatefulShellBranch(
+            navigatorKey: shellNavigatorHome,
+            routes: <RouteBase>[
+              GoRoute(
+                path: "/${AppRoutes.profile.name}",
+                name: AppRoutes.profile.name,
+                builder: (BuildContext context, GoRouterState state) =>
+                    const ProfileScreen(),
+                routes: [
+                  GoRoute(
+                    path: AppRoutes.profileList.name,
+                    name: AppRoutes.profileList.name,
+                    pageBuilder: (context, state) => CustomTransitionPage<void>(
+                      key: state.pageKey,
+                      child: const ProfileListScreen(),
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) =>
+                              FadeTransition(opacity: animation, child: child),
+                    ),
+                  ),
+                  GoRoute(
+                    path:
+                        "${AppRoutes.profileList.name}/subprofile/:profileId", // Use ":itemId" for dynamic value
+                    name: "subProfileList",
+                    builder: (BuildContext context, GoRouterState state) {
+                      final itemId =
+                          int.tryParse(state.pathParameters['profileId']!) ?? 0;
+
+                      return Center(
+                        child: Text(
+                          'Navigated to profile $itemId',
+                          style: const TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+
+          /// Settings
+          StatefulShellBranch(
+            navigatorKey: shellNavigatorSettings,
+            routes: <RouteBase>[
+              GoRoute(
+                path: "/${AppRoutes.settings.name}",
+                name: AppRoutes.settings.name,
+                builder: (BuildContext context, GoRouterState state) =>
+                    const SettingsView(),
+                routes: [
+                  GoRoute(
+                    path: AppRoutes.subSetting.name,
+                    name: AppRoutes.subSetting.name,
+                    pageBuilder: (context, state) {
+                      return CustomTransitionPage<void>(
+                        key: state.pageKey,
+                        child: const SubSettingsView(),
+                        transitionsBuilder: (
+                          context,
+                          animation,
+                          secondaryAnimation,
+                          child,
+                        ) =>
+                            FadeTransition(opacity: animation, child: child),
+                      );
+                    },
+                  ),
+                  // Define sub-route for specific item with dynamic parameter
+                  GoRoute(
+                    path:
+                        "${AppRoutes.subSetting.name}/item/:itemId", // Use ":itemId" for dynamic value
+                    name: "subSettingItem",
+                    builder: (BuildContext context, GoRouterState state) {
+                      final itemId =
+                          int.tryParse(state.pathParameters['itemId']!) ?? 0;
+
+                      return Center(
+                        child: Text(
+                          'Navigated to item $itemId',
+                          style: const TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
       ),
     ],
     redirect: (BuildContext context, GoRouterState state) {

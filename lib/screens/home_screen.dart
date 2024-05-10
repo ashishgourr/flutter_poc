@@ -58,6 +58,13 @@ class HomeScreen extends StatelessWidget {
               },
               child: const Text('Screenshot Screen'),
             ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                context.push("/${AppRoutes.profile.name}");
+              },
+              child: const Text('Nested Navigation Screen'),
+            ),
           ],
         ),
       ),

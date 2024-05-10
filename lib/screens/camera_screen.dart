@@ -15,11 +15,13 @@ class CameraScreen extends StatefulWidget {
   State<CameraScreen> createState() => _CameraScreenState();
 }
 
-class _CameraScreenState extends State<CameraScreen> {
-  late CameraController cameraController;
+class _CameraScreenState extends State<CameraScreen>
+    with WidgetsBindingObserver {
+  late CameraController _controller;
   Future<void>? cameraValue;
+  bool _isCameraInitialized = false;
   List<File> imagesList = [];
-  List<CameraDescription> camerasList = [];
+  late List<CameraDescription> camerasList = [];
   bool isFlashOn = false;
   bool isRearCamera = true;
   bool _isRecording = false;
@@ -40,21 +42,20 @@ class _CameraScreenState extends State<CameraScreen> {
   void takePicture() async {
     XFile? image;
 
-    if (cameraController.value.isTakingPicture ||
-        !cameraController.value.isInitialized) {
+    if (_controller.value.isTakingPicture || !_controller.value.isInitialized) {
       return;
     }
 
     if (isFlashOn == false) {
-      await cameraController.setFlashMode(FlashMode.off);
+      await _controller.setFlashMode(FlashMode.off);
     } else {
-      await cameraController.setFlashMode(FlashMode.torch);
+      await _controller.setFlashMode(FlashMode.torch);
     }
-    image = await cameraController.takePicture();
+    image = await _controller.takePicture();
 
-    if (cameraController.value.flashMode == FlashMode.torch) {
+    if (_controller.value.flashMode == FlashMode.torch) {
       setState(() {
-        cameraController.setFlashMode(FlashMode.off);
+        _controller.setFlashMode(FlashMode.off);
       });
     }
 
@@ -67,18 +68,63 @@ class _CameraScreenState extends State<CameraScreen> {
     MediaScanner.loadMedia(path: file.path);
   }
 
-  void startCamera(int camera) {
-    cameraController = CameraController(
+  // Future<void> initCamera() async {
+  //   camerasList = await availableCameras();
+  //   // Initialize the camera with the first camera in the list
+  //   await onNewCameraSelected(_cameras.first);
+  // }
+
+  void startCamera(int camera) async {
+    _controller = CameraController(
       camerasList[camera],
       ResolutionPreset.high,
       enableAudio: true,
     );
-    cameraValue = cameraController.initialize();
+    cameraValue = _controller.initialize();
+  }
+
+  Future<void> onNewCameraSelected(CameraDescription description) async {
+    final previousCameraController = _controller;
+
+    // Instantiating the camera controller
+    final CameraController cameraController = CameraController(
+      description,
+      ResolutionPreset.high,
+      imageFormatGroup: ImageFormatGroup.jpeg,
+    );
+
+    // Initialize controller
+    try {
+      await cameraController.initialize();
+    } on CameraException catch (e) {
+      debugPrint('Error initializing camera: $e');
+    }
+    // Dispose the previous controller
+    await previousCameraController?.dispose();
+
+    // Replace with the new controller
+    if (mounted) {
+      setState(() {
+        _controller = cameraController;
+      });
+    }
+
+    // Update UI if controller updated
+    cameraController.addListener(() {
+      if (mounted) setState(() {});
+    });
+
+    // Update the Boolean
+    if (mounted) {
+      setState(() {
+        _isCameraInitialized = _controller!.value.isInitialized;
+      });
+    }
   }
 
   _recordVideo() async {
     if (_isRecording) {
-      final file = await cameraController.stopVideoRecording();
+      final file = await _controller.stopVideoRecording();
       setState(() => _isRecording = false);
       final route = MaterialPageRoute(
         fullscreenDialog: true,
@@ -87,8 +133,8 @@ class _CameraScreenState extends State<CameraScreen> {
       // ignore: use_build_context_synchronously
       Navigator.push(context, route);
     } else {
-      await cameraController.prepareForVideoRecording();
-      await cameraController.startVideoRecording();
+      await _controller.prepareForVideoRecording();
+      await _controller.startVideoRecording();
       setState(() => _isRecording = true);
     }
   }
@@ -96,7 +142,34 @@ class _CameraScreenState extends State<CameraScreen> {
   @override
   void initState() {
     super.initState();
-    getCameras();
+    WidgetsBinding.instance.addObserver(this);
+    initCamera();
+    //  getCameras();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // App state changed before we got the chance to initialize.
+    final CameraController cameraController = _controller;
+
+    // App state changed before we got the chance to initialize.
+    if (!cameraController.value.isInitialized) {
+      return;
+    }
+
+    if (state == AppLifecycleState.inactive) {
+      // Free up memory when camera not active
+      cameraController.dispose();
+    } else if (state == AppLifecycleState.resumed) {
+      // Reinitialize the camera with same properties
+      onNewCameraSelected(cameraController.description);
+    }
+  }
+
+  Future<void> initCamera() async {
+    camerasList = await availableCameras();
+    // Initialize the camera with the first camera in the list
+    await onNewCameraSelected(camerasList.first);
   }
 
   void getCameras() async {
@@ -107,21 +180,22 @@ class _CameraScreenState extends State<CameraScreen> {
     if (cameras.isNotEmpty) {
       camerasList = cameras;
 
-      cameraController = CameraController(
+      _controller = CameraController(
         camerasList[0],
         ResolutionPreset.high,
         enableAudio: true,
       );
 
-      cameraValue = cameraController.initialize();
+      await _controller.initialize();
 
-      // startCamera(0);
+      startCamera(0);
     }
   }
 
   @override
   void dispose() {
-    cameraController.dispose();
+    _controller.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -142,7 +216,7 @@ class _CameraScreenState extends State<CameraScreen> {
               fit: BoxFit.cover,
               child: SizedBox(
                 width: 100,
-                child: CameraPreview(cameraController),
+                child: CameraPreview(_controller),
               ),
             ),
           );
